@@ -1,11 +1,18 @@
 from bs4 import BeautifulSoup
 from bs4.element import Comment
+from nltk.stem import WordNetLemmatizer
 import re
 import nltk
 
 unwanted_tokens = ['TO', 'IN', 'CD', 'CC', '.', ':', 'PRP', '(', ')']
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
+lemmatizer = WordNetLemmatizer()
+
+tag_dict = {
+    'NN': 'n',
+    'NNS': 'n'
+}
 
 
 def tag_visible(element):
@@ -33,8 +40,20 @@ def contains_symbols(word):
     return False
 
 
+def clear_redundant_terms(html_file):
+    html_text = ' '.join(re.split('\\s+', text_from_html(html_file))).lower()
+    tokens = list(filter(lambda x: not contains_symbols(x), nltk.word_tokenize(html_text)))
+    tagged = nltk.pos_tag(tokens)
+    return list(map(lambda x: x[0], filter(lambda x: x[1] not in unwanted_tokens, tagged)))
+
+
 def clear_tokens(html_file):
     html_text = ' '.join(re.split('\\s+', text_from_html(html_file))).lower()
     tokens = set(filter(lambda x: not contains_symbols(x), set(nltk.word_tokenize(html_text))))
     tagged = nltk.pos_tag(tokens)
     return set(map(lambda x: x[0], filter(lambda x: x[1] not in unwanted_tokens, tagged)))
+
+
+def lemmatize_tokens(tokens):
+    tokens = nltk.pos_tag(tokens)
+    return [lemmatizer.lemmatize(token, pos=tag_dict.get(tag, 'v')) for token, tag in tokens]

@@ -40,9 +40,13 @@ def contains_symbols(word):
     return False
 
 
-def clear_redundant_terms(html_file):
+def tokenize_html(html_file):
     html_text = ' '.join(re.split('\\s+', text_from_html(html_file))).lower()
-    tokens = list(filter(lambda x: not contains_symbols(x), nltk.word_tokenize(html_text)))
+    return tokenize_str(html_text)
+
+
+def tokenize_str(text):
+    tokens = list(filter(lambda x: not contains_symbols(x), nltk.word_tokenize(text)))
     tagged = nltk.pos_tag(tokens)
     return list(map(lambda x: x[0], filter(lambda x: x[1] not in unwanted_tokens, tagged)))
 

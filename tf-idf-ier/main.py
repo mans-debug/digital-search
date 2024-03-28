@@ -49,7 +49,7 @@ if __name__ == '__main__':
     for html in htmls:
         doc_id = os.path.basename(html.name)
 
-        tokens = lu.clear_redundant_terms(html)
+        tokens = lu.tokenize_html(html)
         term_tf_dict[doc_id] = groupBy_count(tokens)
 
         lemmas = lu.lemmatize_tokens(tokens)

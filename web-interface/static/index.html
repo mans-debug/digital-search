@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Searchifier</title>
+</head>
+<body>
+<script>
+    function searchDocuments() {
+        let query = document.getElementById('query').value
+        document.getElementById('query').value = ''
+        get('/query?query=' + query, function (rawResponse) {
+            let resp = JSON.parse(rawResponse)
+            let finalHtml = '    <tr>\n        <th>Filename</th>\n        <th>Similarity score</th>\n    </tr>\n'
+            resp.forEach((doc) => {
+                finalHtml += '    <tr>\n        <td><a href="' + doc.link +
+                    '">' + doc.name + '</a></td>\n        <td>' + doc.score + '</td>\n    </tr>\n'
+            })
+            document.getElementById('result').innerHTML = finalHtml
+        })
+    }
+
+    function get(url, callback) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function () {
+            callback(xmlHttp.responseText)
+        }
+        xmlHttp.open("GET", url, true); // true for asynchronous
+        xmlHttp.send(null);
+    }
+</script>
+<div align="center">
+    <h1>Search documents! =))</h1>
+    <font size="+2">
+        <label for="query">Query: </label>
+        <input id="query" type="text" placeholder="Type your text query here!">
+        <button type="button" onclick="searchDocuments()">Submit</button>
+    </font>
+    <br>
+    <br>
+    <br>
+</div>
+<table id="result">
+
+</table>
+
+</body>
+</html>

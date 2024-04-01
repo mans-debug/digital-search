@@ -34,7 +34,7 @@ if __name__ == '__main__':
     idf_indexes, unique_tokens_idf = load_indexes()
     unique_tokens = [token for token, _ in unique_tokens_idf]
     matrix = np.zeros((len(idf_indexes.keys()), len(unique_tokens)))
-    path = '/Users/mansurminnikaev/PycharmProjects/crawler/search-engine'
+    path = '/search_engine'
     write_matrix(path + '/tokens.txt', [unique_tokens])
     write_matrix(path + '/tokens-idf-map.txt', unique_tokens_idf)
     for doc_id, doc_idf_map in idf_indexes.items():
